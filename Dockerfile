@@ -5,7 +5,9 @@ ENV TZ=UTC
 
 RUN apt-get update && apt-get install -y software-properties-common gpg curl \
     && add-apt-repository ppa:ondrej/php -y \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get update && apt-get install -y \
+    nodejs \
     zip \
     unzip \
     git \
@@ -44,6 +46,10 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Install dependencies (optimization for production)
 RUN composer install --no-dev --optimize-autoloader || true
+
+# Compile Vite Frontend Assets
+RUN npm install
+RUN npm run build
 
 # Setup directory for Unix socket and SQLite
 # Ensure the database folder itself is wholly owned by www-data
