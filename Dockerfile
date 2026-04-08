@@ -3,8 +3,9 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
-RUN apt-get update && apt-get install -y \
-    curl \
+RUN apt-get update && apt-get install -y software-properties-common gpg curl \
+    && add-apt-repository ppa:ondrej/php -y \
+    && apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
