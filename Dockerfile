@@ -39,17 +39,17 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Copy Application code
 COPY . /var/www/html
 
-# Adjust Permissions immediately
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
-
 # Install dependencies (optimization for production)
 RUN composer install --no-dev --optimize-autoloader || true
 
 # Compile Vite Frontend Assets
 RUN npm install
 RUN npm run build
+
+# Adjust Permissions immediately (Crucial that this is AFTER npm build)
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
 
 # Setup directory for Unix socket and SQLite
 # Ensure the database folder itself is wholly owned by www-data
