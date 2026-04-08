@@ -51,6 +51,10 @@ RUN mkdir -p /run/php && \
     touch /var/www/html/database/database.sqlite && \
     chown -R www-data:www-data /var/www/html/database
 
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 80
 
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
